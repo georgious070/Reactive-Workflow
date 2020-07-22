@@ -2,12 +2,15 @@ package com.glukharev.reactiveworkflow.search
 
 import com.glukharev.framework.Interactor
 
-class SearchInteractor : Interactor<SearchUiAction, SearchInteractorAction>() {
+class SearchInteractor : Interactor<SearchInteractorInputAction, SearchInteractorAction>() {
 
-    override fun handleAction(inputAction: SearchUiAction?): SearchInteractorAction? {
+    override fun handleAction(inputAction: SearchInteractorInputAction?): SearchInteractorAction? {
         return when (inputAction) {
-            is SearchUiAction.StartLoadingAction -> {
-                SearchInteractorAction.PageLoaded(dto = SearchDTO(pageText = "loaded from network text"))
+            is SearchInteractorInputAction.StartLoadingAction -> {
+                SearchInteractorAction.StartLoadFromNetwork
+            }
+            is SearchInteractorInputAction.PageLoaded -> {
+                SearchInteractorAction.SearchResult(searchResult = inputAction.dto.pageText)
             }
             else -> null
         }

@@ -28,5 +28,4 @@ abstract class Reducer<InteractorAction, UIState> {
     }
 
     protected abstract fun handleAction(action: InteractorAction?): UIState?
-
 }

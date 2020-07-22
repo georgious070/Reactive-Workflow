@@ -13,10 +13,11 @@ class SearchActivity : AppCompatActivity() {
 
         // to DI
         val interactor = SearchInteractor()
+        val sideEffect = SearchSideEffect()
         val reducer = SearchReducer()
         val view = SearchView()
 
-        val component = SearchComponent(interactor, reducer, view)
+        val component = SearchComponent(interactor, sideEffect, reducer, view)
 
         component.wire()
         component.bindToView(containerView)

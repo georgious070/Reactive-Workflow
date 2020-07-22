@@ -17,6 +17,8 @@ abstract class Component : ViewModel() {
 
 class SearchComponent(
     private val interactor: SearchInteractor,
+    protected val sideEffect: SearchSideEffect,
+
     private val reducer: SearchReducer,
     private val view: SearchView
 ) : Component() {
@@ -29,6 +31,7 @@ class SearchComponent(
         // TODO use different scopes
         view.bindToScope(viewModelScope)
         interactor.bindToScope(viewModelScope)
+        sideEffect.bindToScope(viewModelScope)
         reducer.bindToScope(viewModelScope)
 
         view.subscribe { uiAction ->
@@ -36,7 +39,16 @@ class SearchComponent(
         }
 
         interactor.subscribe { interactorOutputAction ->
+            // send output actions to reducer
             reducer.handle(interactorOutputAction)
+
+            // send output action to side effects
+            sideEffect.handle(interactorOutputAction)
+        }
+
+        // result of side-effects should be consumed by interactor
+        sideEffect.subscribe { interactorOutputAction ->
+            interactor.handle(interactorOutputAction)
         }
 
         reducer.subscribe { state ->
@@ -49,6 +61,7 @@ class SearchComponent(
 
         view.bindToScope(null)
         interactor.bindToScope(null)
+        sideEffect.bindToScope(null)
         reducer.bindToScope(null)
     }
 }

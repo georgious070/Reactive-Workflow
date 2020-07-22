@@ -5,11 +5,11 @@ import com.glukharev.utils.gone
 import com.glukharev.utils.visible
 import kotlinx.android.synthetic.main.activity_main.view.*
 
-class SearchView : View<SearchUiState, SearchUiAction>() {
+class SearchView : View<SearchUiState, SearchInteractorInputAction>() {
 
     override fun initUserInteraction() {
         containerView?.apply {
-            button.setOnClickListener { sendAction(SearchUiAction.StartLoadingAction) }
+            button.setOnClickListener { sendAction(SearchInteractorInputAction.StartLoadingAction) }
         }
     }
 
@@ -18,6 +18,7 @@ class SearchView : View<SearchUiState, SearchUiAction>() {
             when (state) {
                 SearchUiState.Loading -> {
                     progress.visible()
+                    text.text = "loading..."
                 }
                 SearchUiState.Error -> {
                     progress.gone()

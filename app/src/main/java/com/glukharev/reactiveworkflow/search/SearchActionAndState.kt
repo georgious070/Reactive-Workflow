@@ -1,14 +1,14 @@
 package com.glukharev.reactiveworkflow.search
 
-sealed class SearchUiAction {
-    object StartLoadingAction : SearchUiAction()
-    data class TimeSlotChanged(val string: String) : SearchUiAction()
+sealed class SearchInteractorInputAction {
+    object StartLoadingAction : SearchInteractorInputAction()
+    data class PageLoaded(val dto: SearchDTO) : SearchInteractorInputAction()
 }
 
 sealed class SearchInteractorAction {
-    object Loading : SearchInteractorAction()
     object Error : SearchInteractorAction()
-    data class PageLoaded(val dto: SearchDTO) : SearchInteractorAction()
+    object StartLoadFromNetwork : SearchInteractorAction()
+    data class SearchResult(val searchResult: String) : SearchInteractorAction()
 }
 
 sealed class SearchUiState {

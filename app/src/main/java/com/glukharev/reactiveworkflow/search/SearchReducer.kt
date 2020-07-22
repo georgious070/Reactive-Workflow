@@ -6,10 +6,10 @@ class SearchReducer : Reducer<SearchInteractorAction?, SearchUiState>() {
 
     override fun handleAction(action: SearchInteractorAction?): SearchUiState? {
         return when (action) {
-            is SearchInteractorAction.PageLoaded -> {
-                SearchUiState.ShowContent(text = action.dto.pageText)
+            is SearchInteractorAction.SearchResult -> {
+                SearchUiState.ShowContent(text = action.searchResult)
             }
-            is SearchInteractorAction.Loading -> SearchUiState.Loading
+            is SearchInteractorAction.StartLoadFromNetwork -> SearchUiState.Loading
             is SearchInteractorAction.Error -> SearchUiState.Error
             else -> null
         }
