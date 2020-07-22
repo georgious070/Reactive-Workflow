@@ -26,6 +26,7 @@ class SearchComponent(
     }
 
     override fun wire() {
+        // TODO use different scopes
         view.bindToScope(viewModelScope)
         interactor.bindToScope(viewModelScope)
         reducer.bindToScope(viewModelScope)
@@ -46,8 +47,8 @@ class SearchComponent(
     override fun unWire() {
         view.bind(null)
 
-        view.bindToScope(viewModelScope)
-        interactor.bindToScope(viewModelScope)
-        reducer.bindToScope(viewModelScope)
+        view.bindToScope(null)
+        interactor.bindToScope(null)
+        reducer.bindToScope(null)
     }
 }

@@ -15,7 +15,7 @@ abstract class View<UIState, UIAction> {
 
     protected var containerView: ViewGroup? = null
 
-    fun bindToScope(coroutineScope: CoroutineScope) {
+    fun bindToScope(coroutineScope: CoroutineScope?) {
         this.coroutineScope = coroutineScope
     }
 

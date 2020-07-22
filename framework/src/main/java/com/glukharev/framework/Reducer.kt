@@ -11,7 +11,7 @@ abstract class Reducer<InteractorAction, UIState> {
     protected val outputState =
         MutableStateFlow<UIState?>(null)
 
-    fun bindToScope(coroutineScope: CoroutineScope) {
+    fun bindToScope(coroutineScope: CoroutineScope?) {
         this.coroutineScope = coroutineScope
     }
 

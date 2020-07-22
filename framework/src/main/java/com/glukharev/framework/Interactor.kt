@@ -12,7 +12,7 @@ abstract class Interactor<InputAction, OutputAction> {
     private val outputActions =
         MutableStateFlow<OutputAction?>(null)
 
-    fun bindToScope(coroutineScope: CoroutineScope) {
+    fun bindToScope(coroutineScope: CoroutineScope?) {
         this.coroutineScope = coroutineScope
     }
 
