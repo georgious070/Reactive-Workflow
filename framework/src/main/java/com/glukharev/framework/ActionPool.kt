@@ -5,15 +5,14 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.launch
 
-interface ObservableActionsSource<Action> {
+interface ActionPool<Action> {
     fun send(action: Action)
     fun subscribe(observer: (Action) -> Unit)
 }
 
-class ObservableActionsSourceImpl<Action>(
+class ActionPoolImpl<Action>(
     private val coroutineScope: CoroutineScope
-) :
-    ObservableActionsSource<Action> {
+) : ActionPool<Action> {
 
     private var channel = Channel<Action>(capacity = 1)
 
