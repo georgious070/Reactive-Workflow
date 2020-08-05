@@ -1,7 +1,7 @@
 package com.glukharev.framework
 
-import android.view.ViewGroup
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -13,14 +13,11 @@ abstract class View<UIState, UIAction> {
     private val outputActions =
         MutableStateFlow<UIAction?>(null)
 
-    protected var containerView: ViewGroup? = null
-
     fun bindToScope(coroutineScope: CoroutineScope?) {
         this.coroutineScope = coroutineScope
     }
 
-    fun bind(view: ViewGroup?) {
-        containerView = view
+    fun bind() {
         initUserInteraction()
     }
 

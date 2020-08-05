@@ -1,54 +1,45 @@
 package com.glukharev.reactiveworkflow.search
 
-import android.view.ViewGroup
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-
-abstract class Component : ViewModel() {
-    abstract fun bindToView(containerView: ViewGroup?)
-    abstract fun wire()
-    abstract fun unWire()
-
-    override fun onCleared() {
-        super.onCleared()
-        unWire()
-    }
-}
+import com.glukharev.framework.ScreenActionPool
+import com.glukharev.reactiveworkflow.Component
 
 class SearchComponent(
     private val interactor: SearchInteractor,
-    protected val sideEffect: SearchSideEffect,
-
     private val reducer: SearchReducer,
-    private val view: SearchView
+    private val view: SearchView,
+    private val actionPool: ScreenActionPool
 ) : Component() {
 
-    override fun bindToView(containerView: ViewGroup?) {
-        view.bind(containerView)
+    override fun bindToView() {
+        view.bind()
     }
 
     override fun wire() {
         // TODO use different scopes
         view.bindToScope(viewModelScope)
         interactor.bindToScope(viewModelScope)
-        sideEffect.bindToScope(viewModelScope)
         reducer.bindToScope(viewModelScope)
+        actionPool.bindToScope(viewModelScope)
 
         view.subscribe { uiAction ->
             interactor.handle(uiAction)
+            actionPool.pushSharedAction(uiAction)
+            reducer.handle(uiAction)
         }
 
         interactor.subscribe { interactorOutputAction ->
             // send output actions to reducer
+            actionPool.pushSharedAction(interactorOutputAction)
             reducer.handle(interactorOutputAction)
-
-            // send output action to side effects
-            sideEffect.handle(interactorOutputAction)
         }
 
-        // result of side-effects should be consumed by interactor
-        sideEffect.subscribe { interactorOutputAction ->
-            interactor.handle(interactorOutputAction)
+        actionPool.subscribeSharedAction { sharedAction ->
+            // don`t listen to actions, sent by this component to ActionPool-
+            if (sharedAction !is SearchInteractorInputAction || sharedAction !is SearchInteractorAction) {
+                interactor.handle(sharedAction)
+                reducer.handle(sharedAction)
+            }
         }
 
         reducer.subscribe { state ->
@@ -57,11 +48,12 @@ class SearchComponent(
     }
 
     override fun unWire() {
-        view.bind(null)
+
+        // todo instead putting containerView as null - use lifecycleScope to observe flow from component
+//        view.bind(null)
 
         view.bindToScope(null)
         interactor.bindToScope(null)
-        sideEffect.bindToScope(null)
         reducer.bindToScope(null)
     }
 }

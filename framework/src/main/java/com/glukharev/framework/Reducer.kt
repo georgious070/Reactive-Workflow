@@ -5,10 +5,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
-abstract class Reducer<InteractorAction, UIState> {
+/**
+ *
+ */
+abstract class Reducer<UIState> {
     private var coroutineScope: CoroutineScope? = null
 
-    protected val outputState =
+    private val outputState =
         MutableStateFlow<UIState?>(null)
 
     fun bindToScope(coroutineScope: CoroutineScope?) {
@@ -23,9 +26,9 @@ abstract class Reducer<InteractorAction, UIState> {
         }
     }
 
-    fun handle(action: InteractorAction?) {
+    fun handle(action: Action?) {
         outputState.value = handleAction(action)
     }
 
-    protected abstract fun handleAction(action: InteractorAction?): UIState?
+    protected abstract fun handleAction(action: Action?): UIState?
 }

@@ -1,31 +1,30 @@
 package com.glukharev.reactiveworkflow.search
 
+import android.annotation.SuppressLint
 import com.glukharev.framework.View
-import com.glukharev.utils.gone
-import com.glukharev.utils.visible
-import kotlinx.android.synthetic.main.activity_main.view.*
+import com.glukharev.reactiveworkflow.databinding.ViewSearchBinding
 
-class SearchView : View<SearchUiState, SearchInteractorInputAction>() {
+class SearchView(
+    private val searchBinding: ViewSearchBinding
+) : View<SearchUiState, SearchInteractorInputAction>() {
 
     override fun initUserInteraction() {
-        containerView?.apply {
+        searchBinding.apply {
             button.setOnClickListener { sendAction(SearchInteractorInputAction.StartLoadingAction) }
         }
     }
 
+    @SuppressLint("SetTextI18n")
     override fun render(state: SearchUiState) {
-        containerView?.apply {
+        searchBinding.apply {
             when (state) {
                 SearchUiState.Loading -> {
-                    progress.visible()
                     text.text = "loading..."
                 }
                 SearchUiState.Error -> {
-                    progress.gone()
                     text.text = "Error"
                 }
                 is SearchUiState.ShowContent -> {
-                    progress.gone()
                     text.text = state.text
                 }
             }

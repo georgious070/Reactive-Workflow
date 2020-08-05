@@ -1,11 +1,13 @@
 package com.glukharev.reactiveworkflow.search
 
-sealed class SearchInteractorInputAction {
+import com.glukharev.framework.Action
+
+sealed class SearchInteractorInputAction : Action {
     object StartLoadingAction : SearchInteractorInputAction()
     data class PageLoaded(val dto: SearchDTO) : SearchInteractorInputAction()
 }
 
-sealed class SearchInteractorAction {
+sealed class SearchInteractorAction : Action {
     object Error : SearchInteractorAction()
     object StartLoadFromNetwork : SearchInteractorAction()
     data class SearchResult(val searchResult: String) : SearchInteractorAction()
