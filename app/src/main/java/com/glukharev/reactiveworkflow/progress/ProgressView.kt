@@ -10,6 +10,10 @@ class ProgressView(
     private val progressBinding: ViewProgressBinding
 ) : View<ProgressUiState, Action>() {
 
+    init {
+        sendAction(ProgressAction.Default)
+    }
+
     override fun render(state: ProgressUiState) {
         progressBinding.apply {
             when (state) {

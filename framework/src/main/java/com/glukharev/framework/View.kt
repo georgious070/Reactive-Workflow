@@ -9,9 +9,11 @@ import kotlinx.coroutines.launch
 abstract class View<UIState, UIAction> {
 
     private var coroutineScope: CoroutineScope? = null
+    private val outputActions = MutableStateFlow<UIAction?>(null)
 
-    private val outputActions =
-        MutableStateFlow<UIAction?>(null)
+    abstract fun render(state: UIState)
+
+    protected abstract fun initUserInteraction()
 
     fun bindToScope(coroutineScope: CoroutineScope?) {
         this.coroutineScope = coroutineScope
@@ -32,9 +34,4 @@ abstract class View<UIState, UIAction> {
     protected fun sendAction(action: UIAction) {
         outputActions.value = action
     }
-
-    abstract fun render(state: UIState)
-
-    protected abstract fun initUserInteraction()
-
 }

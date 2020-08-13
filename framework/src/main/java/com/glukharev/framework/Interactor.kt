@@ -1,7 +1,7 @@
 package com.glukharev.framework
 
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -23,7 +23,7 @@ abstract class Interactor {
     }
 
     fun subscribe(observer: (Action) -> Unit) {
-        coroutineScope?.launch {
+        coroutineScope?.launch(Dispatchers.IO) {
             outputActions.collect { action ->
                 action?.let { observer.invoke(action) }
             }
@@ -34,5 +34,5 @@ abstract class Interactor {
         outputActions.value = handleAction(action)
     }
 
-    protected abstract fun handleAction(inputAction: Action?): Flow<Action?>
+    protected abstract fun handleAction(inputAction: Action?): Action?
 }

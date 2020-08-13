@@ -12,8 +12,8 @@ class BlahBlahScreenActionPool : ScreenActionPool {
 
     private var coroutineScope: CoroutineScope? = null
 
-    private val outputActions =
-        MutableStateFlow<Action?>(null)
+    @ExperimentalCoroutinesApi
+    private val sharedAction = MutableStateFlow<Action?>(null)
 
     /**
      * Fragment or activity scope
@@ -22,16 +22,13 @@ class BlahBlahScreenActionPool : ScreenActionPool {
         this.coroutineScope = coroutineScope
     }
 
-    @ExperimentalCoroutinesApi
-    private val sharedAction = MutableStateFlow<Action?>(null)
-
     override fun pushSharedAction(action: Action) {
         sharedAction.value = action
     }
 
     override fun subscribeSharedAction(observer: (Action) -> Unit) {
         coroutineScope?.launch {
-            outputActions.collect { action ->
+            sharedAction.collect { action ->
                 action?.let { observer.invoke(action) }
             }
         }

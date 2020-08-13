@@ -1,11 +1,8 @@
 package com.glukharev.framework
 
 import kotlinx.coroutines.CoroutineScope
-import kotlin.coroutines.CoroutineContext
 
 interface Action
-
-object IgnoreAction : Action
 
 interface ScreenActionPool {
 

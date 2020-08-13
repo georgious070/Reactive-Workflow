@@ -1,8 +1,6 @@
 package com.glukharev.reactiveworkflow
 
-import android.view.ViewGroup
 import androidx.lifecycle.ViewModel
-import com.glukharev.framework.Interactor
 
 /**
  * Component is core-intermediate layer for :

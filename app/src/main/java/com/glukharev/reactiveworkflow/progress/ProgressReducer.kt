@@ -8,6 +8,7 @@ class ProgressReducer : Reducer<ProgressUiState>() {
 
     override fun handleAction(action: Action?): ProgressUiState? {
         return when (action) {
+            is ProgressAction.Default -> ProgressUiState.Hide
             is SearchInteractorAction.SearchResult -> ProgressUiState.Hide
             is SearchInteractorAction.StartLoadFromNetwork -> ProgressUiState.Show
             is SearchInteractorAction.Error -> ProgressUiState.Hide
