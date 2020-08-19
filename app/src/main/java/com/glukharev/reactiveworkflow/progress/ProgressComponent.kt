@@ -1,18 +1,17 @@
 package com.glukharev.reactiveworkflow.progress
 
 import androidx.lifecycle.viewModelScope
-import com.glukharev.reactiveworkflow.BlahBlahScreenActionPool
+import com.glukharev.framework.ScreenActionPool
 import com.glukharev.reactiveworkflow.Component
 
 class ProgressComponent(
     private val reducer: ProgressReducer,
     private val view: ProgressView,
-    private val screenActionPool: BlahBlahScreenActionPool
+    private val screenActionPool: ScreenActionPool
 ) : Component() {
 
     override fun bindToView() {
         view.bind()
-
     }
 
     override fun wire() {
@@ -34,7 +33,9 @@ class ProgressComponent(
     }
 
     override fun unWire() {
-        view.bind()
+//        view.bind(null)
+
+        // todo for this just use viewModelScope
         view.bindToScope(null)
         reducer.bindToScope(null)
     }

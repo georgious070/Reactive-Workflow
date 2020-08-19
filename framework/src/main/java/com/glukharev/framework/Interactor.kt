@@ -2,9 +2,11 @@ package com.glukharev.framework
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * Business logic of component.
@@ -23,7 +25,7 @@ abstract class Interactor {
     }
 
     fun subscribe(observer: (Action) -> Unit) {
-        coroutineScope?.launch(Dispatchers.IO) {
+        coroutineScope?.launch(Dispatchers.Main) {
             outputActions.collect { action ->
                 action?.let { observer.invoke(action) }
             }
@@ -31,8 +33,12 @@ abstract class Interactor {
     }
 
     fun handle(action: Action?) {
-        outputActions.value = handleAction(action)
+        coroutineScope?.launch(Dispatchers.IO) {
+            handleAction(action)?.collect {
+                outputActions.value = it
+            }
+        }
     }
 
-    protected abstract fun handleAction(inputAction: Action?): Action?
+    protected abstract fun handleAction(inputAction: Action?): Flow<Action?>?
 }

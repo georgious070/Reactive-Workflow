@@ -29,13 +29,12 @@ class SearchComponent(
         }
 
         interactor.subscribe { interactorOutputAction ->
-            // send output actions to reducer
             actionPool.pushSharedAction(interactorOutputAction)
             reducer.handle(interactorOutputAction)
         }
 
         actionPool.subscribeSharedAction { sharedAction ->
-            // don`t listen to actions, sent by this component to ActionPool-
+            // don`t listen to actions sent by this component to ActionPool
             if (sharedAction !is SearchInteractorInputAction || sharedAction !is SearchInteractorAction) {
                 interactor.handle(sharedAction)
                 reducer.handle(sharedAction)

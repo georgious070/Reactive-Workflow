@@ -2,16 +2,17 @@ package com.glukharev.reactiveworkflow
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.glukharev.framework.ScreenActionPool
 import com.glukharev.reactiveworkflow.databinding.ActivityMainBinding
 import com.glukharev.reactiveworkflow.databinding.ViewProgressBinding
 import com.glukharev.reactiveworkflow.databinding.ViewSearchBinding
 import com.glukharev.reactiveworkflow.progress.ProgressComponent
 import com.glukharev.reactiveworkflow.progress.ProgressReducer
 import com.glukharev.reactiveworkflow.progress.ProgressView
-import com.glukharev.reactiveworkflow.search.SearchComponent
-import com.glukharev.reactiveworkflow.search.SearchInteractor
-import com.glukharev.reactiveworkflow.search.SearchReducer
-import com.glukharev.reactiveworkflow.search.SearchView
+import com.glukharev.reactiveworkflow.search.*
+import com.google.gson.GsonBuilder
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class SearchActivity : AppCompatActivity() {
 
@@ -31,7 +32,6 @@ class SearchActivity : AppCompatActivity() {
 
         setContentView(binding.root)
 
-
         /*
         Wire components
          */
@@ -49,7 +49,9 @@ class SearchActivity : AppCompatActivity() {
 
 object Deps {
 
-    private val searchInteractor = SearchInteractor()
+    private val searchRepository = SearchRepository(RetrofitINST.getApi())
+
+    private val searchInteractor = SearchInteractor(searchRepository)
     private val searchReducer = SearchReducer()
 
     private val progressReducer = ProgressReducer()
@@ -57,7 +59,7 @@ object Deps {
     /**
      * Activity/fragment scope
      */
-    private val sharedActionPool = BlahBlahScreenActionPool()
+    private val sharedActionPool = ScreenActionPool()
 
     fun getSearchComponent(viewSearchBinding: ViewSearchBinding) = SearchComponent(
         searchInteractor,
@@ -71,4 +73,21 @@ object Deps {
         ProgressView(viewProgressBinding),
         sharedActionPool
     )
+
+
+    object RetrofitINST {
+
+        private val gson = GsonBuilder()
+            .setLenient()
+            .create()
+
+        private val retrofit: Retrofit = Retrofit.Builder()
+            .baseUrl("https://run.mocky.io/v3/")
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
+
+        private val service: SearchAPI = retrofit.create(SearchAPI::class.java)
+
+        fun getApi() = service
+    }
 }
