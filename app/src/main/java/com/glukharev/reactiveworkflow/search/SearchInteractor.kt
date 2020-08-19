@@ -23,7 +23,7 @@ class SearchInteractor constructor(private val repository: SearchRepository) : I
     /**
      * make it as optional fun in Interactor
      */
-    private fun processAction(dataBackAction: Action): Action? {
+    private fun processAction(dataBackAction: Action?): Action? {
         return when (dataBackAction) {
             is SearchInteractorInputAction.PageLoaded -> {
                 SearchInteractorAction.SearchResult(searchResult = "RANDOM test test SEARCH")
@@ -48,6 +48,7 @@ class SearchRepository(private val retrofitService: SearchAPI) {
 
             }
         })
+        return null
     }
 }
 
