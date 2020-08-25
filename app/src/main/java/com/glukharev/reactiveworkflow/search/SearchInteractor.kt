@@ -4,6 +4,7 @@ import com.glukharev.framework.Action
 import com.glukharev.framework.Interactor
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -29,7 +30,7 @@ class SearchInteractor constructor(private val repository: SearchRepository) : I
                 SearchInteractorAction.SearchResult(searchResult = "RANDOM test test SEARCH")
             }
             else -> {
-                null
+                SearchInteractorAction.SearchResult(searchResult = "RANDOM test test SEARCH SOMEEEE")
             }
         }
     }
